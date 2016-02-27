@@ -8,8 +8,8 @@ namespace LANChat
 {
     public class User
     {
-        private String UserName { get; private set; }
-        private IPAddress IP { get; private set; }
+        public String UserName { get; private set; }
+        public IPAddress IP { get; private set; }
 
         public User(String userName)
         {
