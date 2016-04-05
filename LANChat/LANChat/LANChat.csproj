@@ -53,7 +53,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components\ChatControl.xaml.cs">
+      <DependentUpon>ChatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\UsersList.xaml.cs">
+      <DependentUpon>UsersList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="User.cs" />
+    <Page Include="Components\ChatControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\UsersList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
