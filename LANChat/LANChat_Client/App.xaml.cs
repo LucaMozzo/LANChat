@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 
-namespace LANChat
+namespace LANChat_Client
 {
     /// <summary>
     /// Interaction logic for App.xaml

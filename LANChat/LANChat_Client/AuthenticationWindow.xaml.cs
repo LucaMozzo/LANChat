@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace LANChat
+namespace LANChat_Client
 {
     /// <summary>
     /// Interaction logic for AuthenticationWindow.xaml

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace LANChat
+namespace LANChat_Client
 {
     /// <summary>
     /// A user connected to the server

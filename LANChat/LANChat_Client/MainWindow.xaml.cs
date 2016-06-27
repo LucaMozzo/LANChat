@@ -12,14 +12,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LANChat.Components
+namespace LANChat_Client
 {
     /// <summary>
-    /// Interaction logic for ChatControl.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class ChatControl : UserControl
+    public partial class MainWindow : Window
     {
-        public ChatControl()
+        public MainWindow()
         {
             InitializeComponent();
         }
