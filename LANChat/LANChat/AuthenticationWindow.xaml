@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LANChat"
         mc:Ignorable="d"
-        Title="Authentication - LANChat" Height="Auto" Width="600" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize">
+        Title="Authentication - LANChat" Height="Auto" Width="600" SizeToContent="Height" WindowStyle="ToolWindow" ResizeMode="NoResize" Topmost="True">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -28,9 +28,9 @@
             </Grid.ColumnDefinitions>
             <Label Content="Authentication" Grid.Row="0" Grid.Column="0" FontSize="24" FontWeight="Bold" Margin="10,0,0,0" Grid.ColumnSpan="2"/>
             <Label Content="Username" Grid.Row="1" Grid.Column="0" Margin="10,10,0,0"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Margin="10,10,10,0" />
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="10,10,10,0" x:Name="usernameTxt"/>
             <Label Content="Password" Grid.Row="2" Grid.Column="0" Margin="10,10,0,0"/>
-            <PasswordBox Grid.Row="2" Grid.Column="1" Margin="10,10,10,0" />
+            <PasswordBox Grid.Row="2" Grid.Column="1" Margin="10,10,10,0" x:Name="passwordTxt"/>
             <CheckBox x:Name="remoteServer" Content="Connect to a remote server" IsChecked="False" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,0,0" Checked="remoteServer_Checked" Unchecked="remoteServer_Unchecked"/>
             
             <Expander x:Name="expander" Header="Server settings"  VerticalAlignment="Top" Grid.Row="4" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Margin="10,10,10,0" IsEnabled="False" IsExpanded="False">
@@ -46,10 +46,10 @@
                     <Label Content="Server address" Grid.Column="0" Grid.Row="0" Margin="10,10,0,0"/>
                     <TextBox x:Name="addressTxt" Grid.Column="1" Grid.Row="0" ToolTip="The IP address of the LANChat server" Margin="10,10,10,0"/>
                     <Label Content="Port" Grid.Column="0" Grid.Row="1" Margin="10,10,0,10"/>
-                    <TextBox x:Name="portTxt" Grid.Column="1" Grid.Row="1" ToolTip="The IP address of the LANChat server" Margin="10,10,10,10"/>
+                    <TextBox x:Name="portTxt" Grid.Column="1" Grid.Row="1" ToolTip="The IP address of the LANChat server" Margin="10,10,10,10" Text="21"/>
                 </Grid>
             </Expander>
-            <Button Content="Log in" Grid.Row="5" Grid.Column="1" Width="60" Margin="0,10,10,10" HorizontalAlignment="Right"/>
+            <Button x:Name="loginBtn" Content="Log in" Grid.Row="5" Grid.Column="1" Width="60" Margin="0,10,10,10" HorizontalAlignment="Right" Click="loginBtn_Click"/>
         </Grid>
 
     </Grid>
