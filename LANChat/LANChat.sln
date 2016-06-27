@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANChat", "LANChat_Client\LANChat.csproj", "{8599F7B5-E53F-489C-A3A8-54FD026B71FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANChat Core", "LANChat Core\LANChat Core.csproj", "{84200019-E6AD-4E5D-B8D2-72CD98434A18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANChat Server", "LANChat Server\LANChat Server.csproj", "{58301F2F-1966-4EC4-9CFE-45FE03F7E2AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANChat Client", "LANChat Client\LANChat Client.csproj", "{8599F7B5-E53F-489C-A3A8-54FD026B71FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +15,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84200019-E6AD-4E5D-B8D2-72CD98434A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84200019-E6AD-4E5D-B8D2-72CD98434A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84200019-E6AD-4E5D-B8D2-72CD98434A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84200019-E6AD-4E5D-B8D2-72CD98434A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58301F2F-1966-4EC4-9CFE-45FE03F7E2AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58301F2F-1966-4EC4-9CFE-45FE03F7E2AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58301F2F-1966-4EC4-9CFE-45FE03F7E2AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58301F2F-1966-4EC4-9CFE-45FE03F7E2AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8599F7B5-E53F-489C-A3A8-54FD026B71FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8599F7B5-E53F-489C-A3A8-54FD026B71FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8599F7B5-E53F-489C-A3A8-54FD026B71FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
