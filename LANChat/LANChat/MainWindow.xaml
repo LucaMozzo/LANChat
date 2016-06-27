@@ -1,0 +1,26 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:components="clr-namespace:LANChat.Components"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="LANChat.MainWindow"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="2.5*"/>
+        </Grid.ColumnDefinitions>
+        <components:UsersList DockPanel.Dock="Left" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
+        <GridSplitter ResizeDirection="Columns" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext" Grid.Column="1"/>
+        <DockPanel DockPanel.Dock="Top" Grid.Column="1" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,0,0" LastChildFill="True">
+            <Menu x:Name="menu"  Height="Auto" Background="White">
+                <MenuItem Header="File">
+                    <MenuItem Header="About"/>
+                    <Separator/>
+                    <MenuItem Header="Exit"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <components:ChatControl Grid.Column="1" Margin="0,17.96,0,0" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>
