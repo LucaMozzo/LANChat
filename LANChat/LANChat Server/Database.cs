@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Data.SQLite;
+using System.Data.Sql;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace LANChat_Server
 {
     /// <summary>
-    /// Utility for communicating with SQLite database
+    /// Utility for communicating with SQL database
     /// </summary>
     class Database
     {
@@ -19,11 +20,11 @@ namespace LANChat_Server
             DataTable dt = new DataTable();
             try
             {
-                SQLiteConnection connection = new SQLiteConnection("Data Source=data.db");
+                SqlConnection connection = new SqlConnection();
+                connection.ConnectionString = Properties.Settings.Default.AppDataConnectionString;
                 connection.Open();
-                SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = query;
-                SQLiteDataReader reader = command.ExecuteReader();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
                 dt.Load(reader);
                 reader.Close();
                 connection.Close();
@@ -40,10 +41,10 @@ namespace LANChat_Server
         /// <returns>Number of affected rows</returns>
         public static int ExecuteNonQuery(String sql)
         {
-            SQLiteConnection connection = new SQLiteConnection("Data Source=data.db");
+            SqlConnection connection = new SqlConnection();
+            connection.ConnectionString = Properties.Settings.Default.AppDataConnectionString;
             connection.Open();
-            SQLiteCommand command = new SQLiteCommand(connection);
-            command.CommandText = sql;
+            SqlCommand command = new SqlCommand(sql, connection);
             int rowsUpdated = command.ExecuteNonQuery();
             connection.Close();
 
