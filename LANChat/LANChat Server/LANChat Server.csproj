@@ -84,6 +84,12 @@
       <DependentUpon>AppData.mdf</DependentUpon>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LANChat Core\LANChat Core.csproj">
+      <Project>{84200019-e6ad-4e5d-b8d2-72cd98434a18}</Project>
+      <Name>LANChat Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
