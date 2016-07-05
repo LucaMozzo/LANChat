@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.Net;
 
 namespace LANChat_Core
@@ -22,7 +23,7 @@ namespace LANChat_Core
             IP = address;
             token = new Token();
 
-            Console.WriteLine("User {0} with address {1} authenticated with token {2}", userName, IP, token.signature);
+            Utils.WriteColour(String.Format("User {0} with address {1} authenticated with token {2}", userName, IP, token.signature), ConsoleColor.White);
         }
 
         /// <summary>
