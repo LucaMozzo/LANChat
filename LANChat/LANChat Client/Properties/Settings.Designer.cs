@@ -22,5 +22,28 @@ namespace LANChat_Client.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::LANChat_Core.Token token {
+            get {
+                return ((global::LANChat_Core.Token)(this["token"]));
+            }
+            set {
+                this["token"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ipv6 {
+            get {
+                return ((string)(this["ipv6"]));
+            }
+            set {
+                this["ipv6"] = value;
+            }
+        }
     }
 }
