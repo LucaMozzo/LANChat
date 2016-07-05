@@ -4,19 +4,25 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Shared;
 
 namespace LANChat_Core
 {
-    class Server
+    public class Server
     {
         private static ManualResetEvent allDone = new ManualResetEvent(false); //thread signal
         private static Socket listener;
-        private static byte[] byteData = new byte[1024];
+        private static LinkedList<User> users = new LinkedList<User>();
+        private static byte[] buffer;
 
         public static void Start(int port, int maxUsers)
         {
             //Init the socket (TCP)
             listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            //loads the size of the buffer from the settings
+            int bufferSize = Properties.Settings.Default.bufferSize;
+            buffer = new byte[bufferSize];
 
             try
             {
@@ -24,22 +30,25 @@ namespace LANChat_Core
                 listener.Bind(new IPEndPoint(IPAddress.Any, port));
                 listener.Listen(maxUsers);
 
-                while (true)
+                while(true)
                 {
                     // Set the event to nonsignaled state.
                     allDone.Reset();
 
-                    // Start an asynchronous socket to listen for connections.
-                    Console.WriteLine("Waiting for a connection...");
                     listener.BeginAccept(new AsyncCallback(AcceptCallBack), listener);
 
                     // Wait until a connection is made before continuing.
                     allDone.WaitOne();
                 }
             }
-            catch (Exception ex)
+            catch (ThreadAbortException e) { }
+            catch (SocketException e) {
+                Utils.WriteColour("\rException: " + e.Message + ".\nRestart the application or try starting the server on a different port.", ConsoleColor.Red);
+                Console.Write(">");
+            }
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -54,52 +63,23 @@ namespace LANChat_Core
             listener.BeginAccept(new AsyncCallback(AcceptCallBack), null);
 
             //Once the client connects then start receiving the commands from it
-            clientSocket.BeginReceive(byteData, 0, byteData.Length, SocketFlags.None, new AsyncCallback(ReadCallback), clientSocket);
+            clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(ReadCallback), clientSocket);
 
         }
+
+        public static event EventHandler MessageReceived;
 
         private static void ReadCallback(IAsyncResult ar)
         {
             Socket clientSocket = (Socket)ar.AsyncState;
             int bytesReceived = clientSocket.EndReceive(ar);
 
-            //first 4 bytes the command
-            Command command = (Command)BitConverter.ToInt32(byteData, 0);
-            //next 4 bytes the length of the sender IP
-            int senderLength = BitConverter.ToInt32(byteData, 4);
-            //next 4 bytes the length of the message
-            int messageLength = BitConverter.ToInt32(byteData, 8);
+            Utils.WriteColour(String.Format("\r<<< Received {0} bytes.", bytesReceived), ConsoleColor.DarkGreen);
+            Console.Write(">");
 
-            IPAddress senderIP;
-            string message;
+            Message message = (Message) Utils.ByteArrayToObject(buffer);
 
-            Console.WriteLine("Received {0} bytes.", bytesReceived);
-
-            if (bytesReceived > 0)
-            { 
-                string senderStr = Encoding.UTF8.GetString(byteData, 12, senderLength);
-                senderIP = IPAddress.Parse(senderStr);
-                message = Encoding.UTF8.GetString(byteData, 12 + senderLength, messageLength);
-            }
-
-            switch (command)
-            {
-                case Command.Credentials:
-                    break;
-
-                case Command.Login:
-                    break;
-
-                case Command.Logout:
-                    clientSocket.Close();
-                    break;
-
-                case Command.Message:
-                    break;
-
-                case Command.Users:
-                    break;
-            }
+            MessageReceived?.Invoke(null, message); //raise an event
         }
 
         public static void Send(Socket handler, String data)
@@ -120,7 +100,8 @@ namespace LANChat_Core
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+                Utils.WriteColour(String.Format("\r>>> {0} bytes sent.", bytesSent), ConsoleColor.DarkRed);
+                Console.Write(">");
 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
@@ -132,5 +113,4 @@ namespace LANChat_Core
             }
         }
     }
-
 }
