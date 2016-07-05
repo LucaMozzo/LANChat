@@ -9,7 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANChat Server", "LANChat S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANChat Client", "LANChat Client\LANChat Client.csproj", "{8599F7B5-E53F-489C-A3A8-54FD026B71FC}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{3679DD31-55CD-4A3E-9755-1D3DBBE977B3}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{84200019-e6ad-4e5d-b8d2-72cd98434a18}*SharedItemsImports = 4
+		Shared\Shared.projitems*{3679dd31-55cd-4a3e-9755-1d3dbbe977b3}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
