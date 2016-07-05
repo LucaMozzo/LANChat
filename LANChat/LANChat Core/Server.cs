@@ -82,16 +82,16 @@ namespace LANChat_Core
             MessageReceived?.Invoke(null, message); //raise an event
         }
 
-        public static void Send(Socket handler, String data)
+        public static void Send(object data)
         {
             // Convert the string data to byte data using ASCII encoding.
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            byte[] byteData = Utils.ObjectToByteArray(data);
 
             // Begin sending the data to the remote device.
-            handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
+            listener.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), listener);
         }
 
-        public static void SendCallback(IAsyncResult ar)
+        private static void SendCallback(IAsyncResult ar)
         {
             try
             {
