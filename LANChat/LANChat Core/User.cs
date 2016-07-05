@@ -16,10 +16,10 @@ namespace LANChat_Core
         /// Constructor to create a new user sets the given name, retrieves local IP address and creates a token
         /// </summary>
         /// <param name="userName">The public username</param>
-        public User(String userName)
+        public User(String userName, IPAddress address)
         {
             UserName = userName;
-            IP = getIPAddress();
+            IP = address;
             token = new Token();
 
             Console.WriteLine("User {0} with address {1} authenticated with token {2}", userName, IP, token.signature);
@@ -29,7 +29,7 @@ namespace LANChat_Core
         /// Retrieves the local IPv6 address
         /// </summary>
         /// <returns></returns>
-        private IPAddress getIPAddress()
+        public static IPAddress GetIPAddress()
         {
             String strHostName = Dns.GetHostName();
             IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
@@ -37,9 +37,13 @@ namespace LANChat_Core
             return addr[0]; //IPv6
         }
 
+        /// <summary>
+        /// String representation of an user
+        /// </summary>
+        /// <returns>Formatted string with name, IP and token</returns>
         public override string ToString()
         {
-            return UserName + ": " + IP.ToString();
+            return UserName + ": " + IP.ToString() + " (" + token.signature + ")";
         }
     }
 }
