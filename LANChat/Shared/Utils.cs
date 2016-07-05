@@ -8,24 +8,27 @@ namespace Shared
 {
     public static class Utils
     {
-        public static void WriteColour(string text, ConsoleColor colour)
+
+        public static void WriteColour(string text, ConsoleColor colour = ConsoleColor.Gray)
         {
-            ConsoleColor tmp = System.Console.ForegroundColor;
+            ConsoleColor tmp = Console.ForegroundColor;
 
-            System.Console.ForegroundColor = colour;
-            System.Console.WriteLine(text);
+            Console.ForegroundColor = colour;
+            Console.WriteLine("\r" + text);
 
-            System.Console.ForegroundColor = tmp;
+            Console.ForegroundColor = tmp;
+
+            Console.Write(">");
         }
 
         public static byte[] ObjectToByteArray(Object obj)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            using (var ms = new MemoryStream())
-            {
-                bf.Serialize(ms, obj);
-                return ms.ToArray();
-            }
+                BinaryFormatter bf = new BinaryFormatter();
+                using (var ms = new MemoryStream())
+                {
+                    bf.Serialize(ms, obj);
+                    return ms.ToArray();
+                }
         }
 
         public static Object ByteArrayToObject(byte[] arrBytes)

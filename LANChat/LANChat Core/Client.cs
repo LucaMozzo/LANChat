@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -9,59 +10,105 @@ namespace LANChat_Core
     public class Client
     {
         //The main client socket
-        public Socket clientSocket;
-        //Name by which the user logs into the room
-        public string strName;
+        private static Socket clientSocket;
+        private static IPEndPoint server;
+        private static byte[] buffer;
 
-        private byte[] byteData = new byte[1024];
-
-        public void Start()
+        public static void Start(IPEndPoint ipEndPoint)
         {
+            //loads the size of the buffer from the settings
+            int bufferSize = Properties.Settings.Default.bufferSize;
+            buffer = new byte[bufferSize];
+
             try
             {
-                //We are using TCP sockets
-                clientSocket = new Socket(AddressFamily.InterNetwork,
-                               SocketType.Stream, ProtocolType.Tcp);
+                clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-                //Server is listening on port 1000
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, 1000);
+                server = ipEndPoint;
 
                 //Connect to the server
-                clientSocket.BeginConnect(ipEndPoint,
-                    new AsyncCallback(OnConnect), null);
+                clientSocket.BeginConnect(server, new AsyncCallback(ConnectCallback), clientSocket);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //error
+                Console.WriteLine(e.Message);
             }
         }
 
-        public void Send()
+        private static void ConnectCallback(IAsyncResult ar)
         {
             try
             {
-                //We are using TCP sockets
-                clientSocket = new Socket(AddressFamily.InterNetwork,
-                               SocketType.Stream, ProtocolType.Tcp);
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
 
-                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-                //Server is listening on port 1000
-                IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, 1000);
+                // Complete the connection.
+                client.EndConnect(ar);
 
-                //Connect to the server
-                clientSocket.BeginConnect(ipEndPoint,
-                    new AsyncCallback(OnConnect), null);
+                Console.WriteLine("Socket connected to {0}", client.RemoteEndPoint.ToString());
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-               //error
+                Console.WriteLine(e.Message);
             }
         }
 
-        private void OnConnect(IAsyncResult ar)
+        public static void Receive()
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Begin receiving the data from the remote device.
+                clientSocket.BeginReceive(buffer, 0, buffer.Length, 0, new AsyncCallback(ReceiveCallback), clientSocket);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public static void Send(object data)
+        {
+            // Convert the string data to byte data
+            byte[] byteData = Shared.Utils.ObjectToByteArray(data);
+
+            // Begin sending the data to the remote device.
+            clientSocket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), clientSocket);
+        }
+
+        private static void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.
+                int bytesSent = client.EndSend(ar);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public static event EventHandler responseReceived;
+
+        private static void ReceiveCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Read data from the remote device.
+                int bytesRead = clientSocket.EndReceive(ar);
+
+                Message m = (Message)Utils.ByteArrayToObject(buffer);
+
+                responseReceived?.Invoke(null, m);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace LANChat_Core
 {
+    [Serializable]
     public class Token
     {
         public string signature { get; }

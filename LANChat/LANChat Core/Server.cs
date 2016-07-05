@@ -12,8 +12,8 @@ namespace LANChat_Core
     {
         private static ManualResetEvent allDone = new ManualResetEvent(false); //thread signal
         private static Socket listener;
-        private static LinkedList<User> users = new LinkedList<User>();
         private static byte[] buffer;
+        private static Socket clientSocket;
 
         public static void Start(int port, int maxUsers)
         {
@@ -43,8 +43,7 @@ namespace LANChat_Core
             }
             catch (ThreadAbortException e) { }
             catch (SocketException e) {
-                Utils.WriteColour("\rException: " + e.Message + ".\nRestart the application or try starting the server on a different port.", ConsoleColor.Red);
-                Console.Write(">");
+                Utils.WriteColour("Exception: " + e.Message + ".\nRestart the application or try starting the server on a different port.", ConsoleColor.Red);
             }
             catch (Exception e)
             {
@@ -57,7 +56,7 @@ namespace LANChat_Core
             // Signal the main thread to continue.
             allDone.Set();
 
-            Socket clientSocket = listener.EndAccept(ar);
+            clientSocket = listener.EndAccept(ar);
 
             //Start listening for more clients
             listener.BeginAccept(new AsyncCallback(AcceptCallBack), null);
@@ -71,27 +70,26 @@ namespace LANChat_Core
 
         private static void ReadCallback(IAsyncResult ar)
         {
-            Socket clientSocket = (Socket)ar.AsyncState;
+            clientSocket = (Socket)ar.AsyncState;
             int bytesReceived = clientSocket.EndReceive(ar);
 
-            Utils.WriteColour(String.Format("\r<<< Received {0} bytes.", bytesReceived), ConsoleColor.DarkGreen);
-            Console.Write(">");
+            Utils.WriteColour(String.Format("<<< Received {0} bytes.", bytesReceived), ConsoleColor.DarkGreen);
 
             Message message = (Message) Utils.ByteArrayToObject(buffer);
 
             MessageReceived?.Invoke(null, message); //raise an event
         }
 
-        public static void Send(Socket handler, String data)
+        public static void Send(object data)
         {
             // Convert the string data to byte data using ASCII encoding.
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            byte[] byteData = Utils.ObjectToByteArray(data);
 
             // Begin sending the data to the remote device.
-            handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
+            clientSocket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), clientSocket);
         }
 
-        public static void SendCallback(IAsyncResult ar)
+        private static void SendCallback(IAsyncResult ar)
         {
             try
             {
@@ -100,8 +98,7 @@ namespace LANChat_Core
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Utils.WriteColour(String.Format("\r>>> {0} bytes sent.", bytesSent), ConsoleColor.DarkRed);
-                Console.Write(">");
+                Utils.WriteColour(String.Format(">>> {0} bytes sent.", bytesSent), ConsoleColor.DarkRed);
 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
