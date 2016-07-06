@@ -84,10 +84,17 @@ namespace LANChat_Client
         {
             Properties.Settings.Default.token = (Token) ((Message)e).content;
 
-            MainWindow main = new MainWindow();
-            Hide();
-            main.Show();
-            Close();
+            //to avoid exception
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                MainWindow main = new MainWindow();
+
+                Client.responseReceived -= Client_responseReceived; //unsubscribe
+                Hide();
+                Close();
+
+                main.Show();
+            });
         }
     }
 }

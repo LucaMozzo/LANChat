@@ -10,7 +10,7 @@ using Shared;
 
 namespace LANChat_Server
 {
-    class Program
+    partial class Program
     {
         static void Main(string[] args)
         {
@@ -18,6 +18,8 @@ namespace LANChat_Server
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             Console.Title = fileVersionInfo.ProductName;
             Console.WriteLine(fileVersionInfo.ProductName + " " + fileVersionInfo.ProductVersion + "\nCopyright (c) 2016 Luca Mozzo.\n");
+
+            Server.MessageReceived += Server_MessageReceived;
 
             Console.WriteLine("Enter command (type 'help' to show command list)");
             while (console() > 0) ;
@@ -27,7 +29,7 @@ namespace LANChat_Server
 
         private static int console()
         {
-            Console.Write(">");
+            Console.Write("\r>");
             string command = Console.ReadLine();
             string[] commandComps = command.Split(' ');
 
@@ -43,6 +45,11 @@ namespace LANChat_Server
                 case "start":
                     try
                     {
+                        if(listenerTrd != null && listenerTrd.IsAlive)
+                        {
+                            Utils.WriteColour("Another instance of the server is already running. Stop it first.", ConsoleColor.Yellow);
+                            break;
+                        }
                         if (commandComps.Length > 2)
                         {
                             int port = Convert.ToInt16(commandComps[1]);
@@ -68,13 +75,14 @@ namespace LANChat_Server
 
                 case "stop":
                     listenerTrd.Abort();
-                    Utils.WriteColour("Server stopped", ConsoleColor.Green); //TODO
+                    Utils.WriteColour("Server stopped", ConsoleColor.Green);
                     break;
 
-                case "add-user":
-                    if (commandComps.Length > 2)
+                case "add-user": //TODO check for username uniqueness
+                    if (commandComps.Length > 1)
                     {
-                        int rowsUpdated = Database.ExecuteNonQuery(String.Format("INSERT INTO Users(Username, Password) VALUES('{0}', '{1}');", commandComps[1], commandComps[2]));
+                        int rowsUpdated = Database.ExecuteNonQuery(String.Format("INSERT INTO Users(Username, Password) VALUES('{0}', '{1}');", commandComps[1], 
+                            (commandComps[2] != null ? commandComps[2] : "")));
                         Utils.WriteColour(rowsUpdated + " rows updated", (rowsUpdated > 0 ? ConsoleColor.Green : ConsoleColor.Red));
                     }
                     else
@@ -122,6 +130,8 @@ namespace LANChat_Server
                     break;
 
                 case "exit":
+                    if (listenerTrd != null && listenerTrd.IsAlive)
+                        listenerTrd.Abort();
                     return 0;
                 default:
                     Utils.WriteColour("The command is not recognised, type help to get the list of supported commands!", ConsoleColor.Yellow);

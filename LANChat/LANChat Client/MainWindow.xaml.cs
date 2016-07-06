@@ -19,9 +19,12 @@ namespace LANChat_Client
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+
+            statusLbl.Content = "Ready";
         }
     }
 }
