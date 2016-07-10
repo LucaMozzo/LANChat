@@ -25,6 +25,8 @@ namespace LANChat_Client
         public AuthenticationWindow()
         {
             InitializeComponent();
+
+            userTxt.Focus();
         }
 
         private void remoteServer_Checked(object sender, RoutedEventArgs e)
@@ -95,6 +97,18 @@ namespace LANChat_Client
 
                 main.Show();
             });
+        }
+
+        private void userTxt_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                loginBtn_Click(null, new RoutedEventArgs());
+        }
+
+        private void pwdTxt_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                loginBtn_Click(null, new RoutedEventArgs());
         }
     }
 }
