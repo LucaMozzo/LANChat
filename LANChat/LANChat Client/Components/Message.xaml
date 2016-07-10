@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LANChat_Client.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="200" Height="Auto" Width="Auto" SizeChanged="UserControl_SizeChanged">
+             d:DesignHeight="50" d:DesignWidth="200" Height="Auto" Width="Auto">
     
-    <Border CornerRadius="15,15,15,15" Height="Auto" Width="Auto">
+    <Border CornerRadius="15,15,15,15" Height="Auto" Width="Auto" x:Name="messageBorder">
         <Border.Background>
             <LinearGradientBrush StartPoint="1,0" EndPoint="1,1">
                 <GradientStop Offset="0" Color="#FF051BF7" />

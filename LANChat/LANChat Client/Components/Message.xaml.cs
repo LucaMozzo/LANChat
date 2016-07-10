@@ -27,6 +27,15 @@ namespace LANChat_Client.Components
             text.MaxWidth = maxWidth;
             text.Text = messageStr;
 
+            GradientStopCollection gradientStops = new GradientStopCollection();
+            Color color = (Color) ColorConverter.ConvertFromString("#FF051BF7");
+            var gs1 = new GradientStop(color, 0);
+            color = (Color)ColorConverter.ConvertFromString("#FF49F808");
+            var gs2 = new GradientStop(color, 2);
+            gradientStops.Add(gs1);
+            gradientStops.Add(gs2);
+            messageBorder.Background = new LinearGradientBrush(gradientStops);
+
         }
 
         public double GetActualHeight()
@@ -38,5 +47,6 @@ namespace LANChat_Client.Components
         {
             text.MaxWidth = newWidth;
         }
+
     }
 }

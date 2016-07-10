@@ -102,7 +102,7 @@ namespace LANChat_Server
                 case "change-pwd":
                     if (commandComps.Length > 2)
                     {
-                        int rowsUpdated = Database.ExecuteNonQuery(String.Format("UPDATE Users SET Password='{0}' WHERE Username='{1}';", commandComps[1], commandComps[2]));
+                        int rowsUpdated = Database.ExecuteNonQuery(String.Format("UPDATE Users SET Password='{0}' WHERE Username='{1}';", commandComps[2], commandComps[1]));
                         Utils.WriteColour(rowsUpdated + " rows updated", (rowsUpdated > 0 ? ConsoleColor.Green : ConsoleColor.Red));
                     }
                     else
