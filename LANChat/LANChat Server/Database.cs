@@ -2,6 +2,7 @@
 using System.Data.Sql;
 using System.Data;
 using System.Data.SqlClient;
+using LANChat_Core;
 
 namespace LANChat_Server
 {
@@ -49,6 +50,17 @@ namespace LANChat_Server
             connection.Close();
 
             return rowsUpdated;
+        }
+
+        /// <summary>
+        /// Checks whether the token is valid or not
+        /// </summary>
+        /// <param name="token">The token</param>
+        /// <returns>True if it's valid</returns>
+        public static bool checkToken(Token token)
+        {
+            DataRow result = ExecuteQuery(String.Format("SELECT COUNT(*) FROM Session WHERE Token='{0}'", token.signature)).Rows[0];
+            return ((int) result.ItemArray[0] > 0 ?  true : false);
         }
     }
 }
