@@ -10,6 +10,7 @@ namespace LANChat_Server
     partial class Program
     {
         private static List<User> users = new List<User>();
+        private static Message response;
 
         private static void Server_MessageReceived(object sender, EventArgs e)
         {
@@ -34,7 +35,7 @@ namespace LANChat_Server
                                 Database.ExecuteNonQuery(query);
 
                                 //send the token to the client
-                                Message response = new Message();
+                                response = new Message();
                                 response.content = user.token;
                                 Server.Send(response);
 
@@ -50,15 +51,32 @@ namespace LANChat_Server
                     case Command.Login:
                         break;
                     case Command.Logout:
+                        if (Database.checkToken(m.token))
+                        {
+                            //TODO users.Remove
+                            int rowsAffected = Database.ExecuteNonQuery(String.Format("DELETE FROM Session WHERE EXISTS (SELECT * FROM Users JOIN Session ON ID=UserID WHERE UserIP='{0}');", m.sender));
+                            if (rowsAffected > 0)
+                                Utils.WriteColour("The user with IPv6 " + m.sender + " has logged out.");
+                        }
                         break;
                     case Command.Message:
+                        if (Database.checkToken(m.token))
+                        {
+                            response = new Message();
+                            response.command = Command.Message;
+                            response.receiver = m.sender;
+                            response.content = "Received: " + (String)m.content;
+                            Server.Send(response);
+                        }
                         break;
                     case Command.Users:
-                        //TODO check token first
-                        m = new Message();
-                        m.command = Command.Users;
-                        m.content = users;
-                        Server.Send(m);
+                        if (Database.checkToken(m.token))
+                        {
+                            response = new Message();
+                            response.command = Command.Users;
+                            response.content = users;
+                            Server.Send(response);
+                        }
                         break;
                 }
             }
