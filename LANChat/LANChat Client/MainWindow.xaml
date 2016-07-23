@@ -4,7 +4,7 @@
         xmlns:components="clr-namespace:LANChat_Client.Components"
         xmlns:properties="clr-namespace:LANChat_Client.Properties"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="LANChat_Client.MainWindow"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -22,6 +22,7 @@
                 <MenuItem Header="File">
                     <MenuItem Header="About"/>
                     <Separator/>
+                    <MenuItem Header="Log out"/>
                     <MenuItem Header="Exit"/>
                 </MenuItem>
             </Menu>

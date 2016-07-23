@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LANChat_Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Shared;
+using System.Threading;
+using System.Net;
 
 namespace LANChat_Client.Components
 {
@@ -19,31 +23,49 @@ namespace LANChat_Client.Components
     /// </summary>
     public partial class ChatControl : UserControl
     {
-
-        public event EventHandler btnSendPressed;
-
         private LinkedList<Message> messages;
         private double maxWidth = 280;
+        private Thread listeningTrd;
 
         public ChatControl()
         {
             InitializeComponent();
 
+            Client.responseReceived += Client_responseReceived;
+
             messages = new LinkedList<Message>();
         }
 
-        private static int count = 0;
-        private void Test(String a)
+        private void Client_responseReceived(object sender, EventArgs e)
         {
-            Message m = new Message(a, maxWidth);
+            if (e.GetType().IsEquivalentTo(typeof(Shared.Message)))
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    AddMessage((String)((Shared.Message)e).content, Message.MessageOwner.SERVER);
+                });
+        }
+
+        private static int count = 0;
+
+        private void AddMessage(String message, Message.MessageOwner sender)
+        {
+            Message m = new Message(message, sender ,maxWidth);
             m.Margin = new Thickness(5, 2.5, 5, 2.5);
             //add a row
             var rd = new RowDefinition();
-            rd.Height = new GridLength(50);
+            rd.Height = new GridLength(50); //default
             feed.RowDefinitions.Add(rd);
 
             Grid.SetRow(m, count++);
-            Grid.SetColumn(m, 0);
+            switch(sender)
+            {
+                case Message.MessageOwner.SERVER:
+                    Grid.SetColumn(m, 0);
+                    break;
+                case Message.MessageOwner.YOU:
+                    Grid.SetColumn(m, 1);
+                    break;
+            }
             Grid.SetColumnSpan(m, 2);
             feed.Children.Add(m);
 
@@ -52,26 +74,24 @@ namespace LANChat_Client.Components
             rd.Height = new GridLength(m.GetActualHeight());
         }
 
-        public void AddMessage(string username = "", string message ="")
-        {
-
-        }
-
         private void sendBtn_Click(object sender, RoutedEventArgs e)
         {
-            Test(messageTxt.Text);
-            EventHandler handler = btnSendPressed;
-            if (handler != null)
-                handler.Invoke(this, new EventData(messageTxt.Text));
-        }
-
-        public class EventData : EventArgs
-        {
-            private string message { get; set; }
-
-            public EventData(String message)
+            if (messageTxt.Text != "" && messageTxt.Text != " ")
             {
-                this.message = message;
+                AddMessage(messageTxt.Text, Message.MessageOwner.YOU);
+
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Properties.Settings.Default.serverAddress), Properties.Settings.Default.port);
+                Client.Start(endPoint);
+
+                var m = new Shared.Message();
+                m.command = Command.Message;
+                m.sender = IPAddress.Parse(Properties.Settings.Default.ipv6);
+                m.content = messageTxt.Text;
+                m.token = Properties.Settings.Default.token;
+                Client.Send(m);
+
+                messageTxt.Text = "";
+                Client.Receive();
             }
         }
 
@@ -85,6 +105,18 @@ namespace LANChat_Client.Components
             }
                 
 
+        }
+
+        private void chatControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            listeningTrd = new Thread(() => receiver());
+            //listeningTrd.Start();
+        }
+
+
+        private void receiver()
+        {
+            
         }
     }
 }
