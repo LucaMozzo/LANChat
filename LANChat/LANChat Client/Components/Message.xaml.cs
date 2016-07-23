@@ -19,23 +19,14 @@ namespace LANChat_Client.Components
     /// </summary>
     public partial class Message : UserControl
     {
-
-        public Message(string messageStr, double maxWidth = 280)
+        public Message(string messageStr, MessageOwner sender, double maxWidth = 280)
         { 
             InitializeComponent();
 
             text.MaxWidth = maxWidth;
             text.Text = messageStr;
 
-            GradientStopCollection gradientStops = new GradientStopCollection();
-            Color color = (Color) ColorConverter.ConvertFromString("#FF051BF7");
-            var gs1 = new GradientStop(color, 0);
-            color = (Color)ColorConverter.ConvertFromString("#FF49F808");
-            var gs2 = new GradientStop(color, 2);
-            gradientStops.Add(gs1);
-            gradientStops.Add(gs2);
-            messageBorder.Background = new LinearGradientBrush(gradientStops);
-
+            Paint(sender);
         }
 
         public double GetActualHeight()
@@ -47,6 +38,37 @@ namespace LANChat_Client.Components
         {
             text.MaxWidth = newWidth;
         }
+
+        public void Paint(MessageOwner sender)
+        {
+            GradientStopCollection gradientStops = new GradientStopCollection();
+            GradientStop gradientStop1 = null, gradientStop2 = null;
+
+            switch (sender)
+            {
+                case MessageOwner.SERVER:
+                    Color color = (Color)ColorConverter.ConvertFromString("#FF051BF7");
+                    gradientStop1 = new GradientStop(color, 0);
+                    color = (Color)ColorConverter.ConvertFromString("#FF08D1F8");
+                    gradientStop2 = new GradientStop(color, 2);
+                    break;
+                case MessageOwner.YOU:
+                    color = (Color)ColorConverter.ConvertFromString("#FF8B8B8D");
+                    gradientStop1 = new GradientStop(color, 0);
+                    color = (Color)ColorConverter.ConvertFromString("#FFB2B4B4");
+                    gradientStop2 = new GradientStop(color, 2);
+                    break;
+            }
+
+            gradientStops.Add(gradientStop1);
+            gradientStops.Add(gradientStop2);
+            messageBorder.Background = new LinearGradientBrush(gradientStops, new Point(1, 0), new Point(1, 1));
+        }
+
+        /// <summary>
+        /// The message owner is the sender of the message. Different owners may have different colours
+        /// </summary>
+        public enum MessageOwner { YOU, SERVER }
 
     }
 }
