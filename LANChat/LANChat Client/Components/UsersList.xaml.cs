@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LANChat_Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,9 @@ namespace LANChat_Client.Components
         public UsersList()
         {
             InitializeComponent();
+
             users = new List<User>();
-            //test only
-            users.Add(new User("Test1"));
-            users.Add(new User("Test2"));
-            userList.ItemsSource = users;
+            userList.ItemsSource = users; //TODO set max width
         }
 
         /// <summary>

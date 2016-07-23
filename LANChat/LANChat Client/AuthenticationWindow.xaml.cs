@@ -25,6 +25,8 @@ namespace LANChat_Client
         public AuthenticationWindow()
         {
             InitializeComponent();
+
+            userTxt.Focus();
         }
 
         private void remoteServer_Checked(object sender, RoutedEventArgs e)
@@ -52,6 +54,8 @@ namespace LANChat_Client
             {
                 IPAddress addr = IPAddress.Parse(addressTxt.Text);
                 IPEndPoint endPoint = new IPEndPoint(addr, Convert.ToInt16(portTxt.Text));
+                Properties.Settings.Default.serverAddress = addr.ToString();
+                Properties.Settings.Default.port = Convert.ToInt16(portTxt.Text);
                 Client.Start(endPoint);
                 
                 //request a token
@@ -84,10 +88,29 @@ namespace LANChat_Client
         {
             Properties.Settings.Default.token = (Token) ((Message)e).content;
 
-            MainWindow main = new MainWindow();
-            Hide();
-            main.Show();
-            Close();
+            //to avoid exception
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                MainWindow main = new MainWindow();
+
+                Client.responseReceived -= Client_responseReceived; //unsubscribe
+                Hide();
+                Close();
+
+                main.Show();
+            });
+        }
+
+        private void userTxt_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                loginBtn_Click(null, new RoutedEventArgs());
+        }
+
+        private void pwdTxt_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                loginBtn_Click(null, new RoutedEventArgs());
         }
     }
 }

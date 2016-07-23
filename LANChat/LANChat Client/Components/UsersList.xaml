@@ -9,7 +9,7 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <Label Content="Connected users" DockPanel.Dock="Top"/>
-            <ListBox x:Name="userList" ItemsSource="{Binding users}" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+            <ListBox x:Name="userList" ItemsSource="{Binding users}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Margin="5,5,2.5,5">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Height="Auto">
