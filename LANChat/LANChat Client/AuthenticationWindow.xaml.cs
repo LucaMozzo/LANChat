@@ -54,6 +54,8 @@ namespace LANChat_Client
             {
                 IPAddress addr = IPAddress.Parse(addressTxt.Text);
                 IPEndPoint endPoint = new IPEndPoint(addr, Convert.ToInt16(portTxt.Text));
+                Properties.Settings.Default.serverAddress = addr.ToString();
+                Properties.Settings.Default.port = Convert.ToInt16(portTxt.Text);
                 Client.Start(endPoint);
                 
                 //request a token

@@ -45,5 +45,29 @@ namespace LANChat_Client.Properties {
                 this["ipv6"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string serverAddress {
+            get {
+                return ((string)(this["serverAddress"]));
+            }
+            set {
+                this["serverAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int port {
+            get {
+                return ((int)(this["port"]));
+            }
+            set {
+                this["port"] = value;
+            }
+        }
     }
 }
