@@ -12,37 +12,49 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
+using Shared;
+using System.Net;
 
 namespace LANChat_Client.Components
 {
     public partial class UsersList : UserControl
     {
-        public List<User> users { get; }
 
         public UsersList()
         {
             InitializeComponent();
 
-            users = new List<User>();
-            userList.ItemsSource = users; //TODO set max width
+			Client.responseReceived += Client_responseReceived;
+
+			Thread trd = new Thread(() => refresh());
+			trd.Priority = ThreadPriority.BelowNormal;
+			trd.Start();
         }
 
-        /// <summary>
-        /// Add a user to the list of connected users
-        /// </summary>
-        /// <param name="user">User to be included in the list</param>
-        public void UserConnected(User user)
-        {
-            users.Add(user);
-        }
+		private void Client_responseReceived(object sender, EventArgs e)
+		{
+			if (e.GetType().IsEquivalentTo(typeof(Shared.Message)))
+				if (((Shared.Message)e).command == Command.Message)
+					userList.ItemsSource = (LinkedList<User>)((Shared.Message)e).content;
+		}
 
-        /// <summary>
-        /// Remove a user from disconnected users
-        /// </summary>
-        /// <param name="user">User to be removed</param>
-        public void UserDisconnected(User user)
-        {
-            users.Remove(user);
-        }
+		private void refresh()
+		{
+			Timer timer = new Timer(new TimerCallback(callBack), null, 0, 500);
+		}
+
+		private void callBack(Object stateInfo)
+		{
+			Shared.Message m = new Shared.Message();
+			m.sender = IPAddress.Parse(Properties.Settings.Default.ipv6);
+			m.token = Properties.Settings.Default.token;
+			m.command = Command.Users;
+
+			Client.Send(m);
+
+			Client.Receive();
+		}
+
     }
 }

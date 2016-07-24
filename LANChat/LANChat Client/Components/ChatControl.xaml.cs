@@ -25,7 +25,6 @@ namespace LANChat_Client.Components
     {
         private LinkedList<Message> messages;
         private double maxWidth = 280;
-        private Thread listeningTrd;
 
         public ChatControl()
         {
@@ -39,10 +38,11 @@ namespace LANChat_Client.Components
         private void Client_responseReceived(object sender, EventArgs e)
         {
             if (e.GetType().IsEquivalentTo(typeof(Shared.Message)))
-                Application.Current.Dispatcher.Invoke((Action)delegate
-                {
-                    AddMessage((String)((Shared.Message)e).content, Message.MessageOwner.SERVER);
-                });
+				if(((Shared.Message)e).command == Command.Message)
+					Application.Current.Dispatcher.Invoke((Action)delegate
+					{
+						AddMessage((String)((Shared.Message)e).content, Message.MessageOwner.SERVER);
+					});
         }
 
         private static int count = 0;
@@ -105,18 +105,6 @@ namespace LANChat_Client.Components
             }
                 
 
-        }
-
-        private void chatControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            listeningTrd = new Thread(() => receiver());
-            //listeningTrd.Start();
-        }
-
-
-        private void receiver()
-        {
-            
         }
     }
 }
