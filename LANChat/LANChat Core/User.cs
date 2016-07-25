@@ -14,9 +14,10 @@ namespace LANChat_Core
         public Token token { get; private set; }
 
         /// <summary>
-        /// Constructor to create a new user sets the given name, retrieves local IP address and creates a token
+        /// Constructor to create a new user sets the given name, sets the IP address and creates a token
         /// </summary>
         /// <param name="userName">The public username</param>
+        /// <param name="address">The IP address</param>
         public User(String userName, IPAddress address)
         {
             UserName = userName;
@@ -24,6 +25,15 @@ namespace LANChat_Core
             token = new Token();
 
             Utils.WriteColour(String.Format("User {0} with address {1} authenticated with token {2}", userName, IP, token.signature), ConsoleColor.White);
+        }
+
+        /// <summary>
+        /// Constructor to create a new user sets the given name, retrieves local IP address and creates a token
+        /// </summary>
+        /// <param name="userName">The public username</param>
+        public User(String userName) : this(userName, GetIPAddress())
+        {
+
         }
 
         /// <summary>
