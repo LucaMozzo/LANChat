@@ -25,15 +25,15 @@ namespace LANChat_Core.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4096")]
         public int bufferSize {
             get {
                 return ((int)(this["bufferSize"]));
             }
-            set
-            {
-                this["bufferSize"] = value;
-            }
+			set
+			{
+				this["bufferSize"] = value;
+			}
         }
     }
 }
