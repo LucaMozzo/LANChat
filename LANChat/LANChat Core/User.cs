@@ -7,6 +7,7 @@ namespace LANChat_Core
     /// <summary>
     /// A user connected to the server
     /// </summary>
+	[Serializable]
     public class User
     {
         public String UserName { get; private set; }

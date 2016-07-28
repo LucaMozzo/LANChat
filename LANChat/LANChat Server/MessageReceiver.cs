@@ -3,13 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using LANChat_Core;
+using System.Linq;
 using System.Text;
+using System.Net;
 
 namespace LANChat_Server
 {
     partial class Program
     {
-        private static List<User> users = new List<User>();
+        private static LinkedList<User> onlineUsers = new LinkedList<User>();
         private static Message response;
 
         private static void Server_MessageReceived(object sender, EventArgs e)
@@ -39,7 +41,7 @@ namespace LANChat_Server
                                 response.content = user.token;
                                 Server.Send(response);
 
-                                users.Add(user);
+                                onlineUsers.AddLast(user);
                             }
                         }
                         catch (IndexOutOfRangeException ex)
@@ -48,15 +50,17 @@ namespace LANChat_Server
                         }
                         break;
 
-                    case Command.Login:
-                        break;
                     case Command.Logout:
                         if (Database.checkToken(m.token))
                         {
-                            //TODO users.Remove
                             int rowsAffected = Database.ExecuteNonQuery(String.Format("DELETE FROM Session WHERE EXISTS (SELECT * FROM Users JOIN Session ON ID=UserID WHERE UserIP='{0}');", m.sender));
                             if (rowsAffected > 0)
-                                Utils.WriteColour("The user with IPv6 " + m.sender + " has logged out.");
+							{
+								Utils.WriteColour("The user with IPv6 " + m.sender + " has logged out.");
+
+								//remove the user from the list
+								onlineUsers.Remove((from u in onlineUsers where u.IP.Equals(m.sender) select u).ElementAt(0));
+							}
                         }
                         break;
                     case Command.Message:
@@ -64,7 +68,6 @@ namespace LANChat_Server
                         {
                             response = new Message();
                             response.command = Command.Message;
-                            response.receiver = m.sender;
                             response.content = "Received: " + (String)m.content;
                             Server.Send(response);
                         }
@@ -74,7 +77,7 @@ namespace LANChat_Server
                         {
                             response = new Message();
                             response.command = Command.Users;
-                            response.content = users;
+                            response.content = onlineUsers;
                             Server.Send(response);
                         }
                         break;
