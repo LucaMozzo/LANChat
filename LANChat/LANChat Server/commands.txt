@@ -1,0 +1,11 @@
+﻿Available commands:
+start {port} {max connections}			Starts the server listening on that port and limits the users.
+stop									Stops the server.
+add-user {username} {password}			Adds an user to the database.
+del-user {username}						Deletes the specified user.
+change-pwd {username} {new password}	Changes the password of an existing user.
+users-list								Returns a list of all the users.
+buffer-size [{new size}]				Changes the size of the buffer to the new size, or returns the current buffer size.
+clear-session							Revokes all the tokens and disconnect all the clients.
+statistics								Show the total number of bytes sent and received for this session.
+exit									Quit the application.

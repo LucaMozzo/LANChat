@@ -38,7 +38,7 @@ namespace LANChat_Server
                 case "help":
                     Console.WriteLine("Available commands:\nstart {port} {max connections}\tStarts the server listening on that port and limits the users.\nstop\tStops the server.\nadd-user {username} {password}\t" + 
                         "Adds an user to the database.\ndel-user {username}\tDeletes the specified user.\nchange-pwd {username} {new password}\tChanges the password of an existing user.\n" +
-                        "users-list\tReturns a list of all the users.\nbuffer-size [{new size}]\tChanges the size of the buffer to the new size, or returns the current buffer size\nexit\t Quit the application.");
+                        "users-list\tReturns a list of all the users.\nbuffer-size [{new size}]\tChanges the size of the buffer to the new size, or returns the current buffer size\nclear-session\tRevoke all the tokens and disconnect all the clients\nexit\t Quit the application.");
                     console();
                     break;
 
@@ -78,11 +78,11 @@ namespace LANChat_Server
                     Utils.WriteColour("Server stopped", ConsoleColor.Green);
                     break;
 
-                case "add-user": //TODO check for username uniqueness
-                    if (commandComps.Length > 1)
+                case "add-user":
+                    if (commandComps.Length > 1 && Database.ExecuteQuery("SELECT * FROM Users WHERE Username='" + commandComps[1] + "';").Rows.Count == 0)
                     {
                         int rowsUpdated = Database.ExecuteNonQuery(String.Format("INSERT INTO Users(Username, Password) VALUES('{0}', '{1}');", commandComps[1], 
-                            (commandComps[2] != null ? commandComps[2] : "")));
+                            (commandComps.Length > 2 ? commandComps[2] : "")));
                         Utils.WriteColour(rowsUpdated + " rows updated", (rowsUpdated > 0 ? ConsoleColor.Green : ConsoleColor.Red));
                     }
                     else
@@ -129,10 +129,20 @@ namespace LANChat_Server
                     }
                     break;
 
+				case "clear-session":
+					int ru = Database.ExecuteNonQuery("DELETE FROM Session;");
+					Utils.WriteColour(ru + " rows updated", (ru > 0 ? ConsoleColor.Green : ConsoleColor.Red));
+					break;
+
+				case "statistics":
+					Utils.WriteColour("Total bytes sent: " + Server.totalSent + "\nTotal bytes received: " + Server.totalReceived);
+					break;
+
                 case "exit":
                     if (listenerTrd != null && listenerTrd.IsAlive)
                         listenerTrd.Abort();
                     return 0;
+
                 default:
                     Utils.WriteColour("The command is not recognised, type help to get the list of supported commands!", ConsoleColor.Yellow);
                     break;
