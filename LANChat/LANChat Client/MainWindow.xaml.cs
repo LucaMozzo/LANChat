@@ -22,6 +22,16 @@ namespace LANChat_Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Property that changes the status when setted
+        /// </summary>
+        public string status
+        {
+            set
+            {
+                statusLbl.Content = value;
+            }
+        }
 
         public MainWindow()
         {

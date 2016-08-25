@@ -52,6 +52,8 @@ namespace LANChat_Client
 
             try
             {
+				loginBtn.IsEnabled = false;
+
                 IPAddress addr = IPAddress.Parse(addressTxt.Text);
                 IPEndPoint endPoint = new IPEndPoint(addr, Convert.ToInt16(portTxt.Text));
                 Properties.Settings.Default.serverAddress = addr.ToString();
