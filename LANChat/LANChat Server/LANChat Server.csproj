@@ -87,7 +87,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>AppData.mdf</DependentUpon>
     </Content>
-    <Content Include="commands.txt" />
+    <Content Include="commands.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LANChat Core\LANChat Core.csproj">

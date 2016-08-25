@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Text;
+using System.IO;
 using LANChat_Core;
 using Shared;
 
@@ -36,9 +37,7 @@ namespace LANChat_Server
             switch (commandComps[0])
             {
                 case "help":
-                    Console.WriteLine("Available commands:\nstart {port} {max connections}\tStarts the server listening on that port and limits the users.\nstop\tStops the server.\nadd-user {username} {password}\t" + 
-                        "Adds an user to the database.\ndel-user {username}\tDeletes the specified user.\nchange-pwd {username} {new password}\tChanges the password of an existing user.\n" +
-                        "users-list\tReturns a list of all the users.\nbuffer-size [{new size}]\tChanges the size of the buffer to the new size, or returns the current buffer size\nclear-session\tRevoke all the tokens and disconnect all the clients\nexit\t Quit the application.");
+                    Console.WriteLine(File.ReadAllText("commands.txt"));
                     console();
                     break;
 
@@ -62,7 +61,7 @@ namespace LANChat_Server
 
                             listenerTrd = new Thread(() => Server.Start(port, Convert.ToInt16(commandComps[2])));
                             listenerTrd.Start();
-                            Utils.WriteColour("Server started on port " + port + ". Max users allowed: " + commandComps[2], ConsoleColor.Green); //TODO prevent to start it twice
+                            Utils.WriteColour("Server started on port " + port + ". Max users allowed: " + commandComps[2] + "\nLocal IPv6: " + User.GetIPAddress().ToString() , ConsoleColor.Green); //TODO prevent to start it twice
                         }
                         else
                             Utils.WriteColour("Missing the port or the maximum connections allowed parameter!", ConsoleColor.Yellow);
