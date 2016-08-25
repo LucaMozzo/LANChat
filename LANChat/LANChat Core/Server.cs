@@ -15,6 +15,9 @@ namespace LANChat_Core
         private static byte[] buffer;
         private static Socket clientSocket;
 
+		public static long totalSent { get; private set; }
+		public static long totalReceived { get; private set; }
+
         public static void Start(int port, int maxUsers)
         {
             //Init the socket (TCP)
@@ -73,7 +76,8 @@ namespace LANChat_Core
             clientSocket = (Socket)ar.AsyncState;
             int bytesReceived = clientSocket.EndReceive(ar);
 
-            Utils.WriteColour(String.Format("<<< Received {0} bytes.", bytesReceived), ConsoleColor.DarkGreen);
+			totalReceived += bytesReceived;
+            //Utils.WriteColour(String.Format("<<< Received {0} bytes.", bytesReceived), ConsoleColor.DarkGreen);
 
             Message message = (Message) Utils.ByteArrayToObject(buffer);
 
@@ -98,7 +102,8 @@ namespace LANChat_Core
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Utils.WriteColour(String.Format(">>> {0} bytes sent.", bytesSent), ConsoleColor.DarkRed);
+				totalSent += bytesSent;
+                //Utils.WriteColour(String.Format(">>> {0} bytes sent.", bytesSent), ConsoleColor.DarkRed);
 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
