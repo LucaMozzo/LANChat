@@ -8,8 +8,6 @@ namespace Shared
     {
         //credentials before connection
         Credentials,
-        //when connected
-        Login,
         //when disconnected
         Logout,
         //a message to all clients
