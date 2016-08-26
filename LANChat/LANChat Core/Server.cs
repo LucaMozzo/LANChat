@@ -84,13 +84,20 @@ namespace LANChat_Core
             MessageReceived?.Invoke(null, message); //raise an event
         }
 
-        public static void Send(object data)
+		/// <summary>
+		/// Sends a message async
+		/// </summary>
+		/// <param name="data">The message to be sent</param>
+		/// <returns>The socket of the client for other uses</returns>
+        public static Socket Send(object data)
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Utils.ObjectToByteArray(data);
 
             // Begin sending the data to the remote device.
             clientSocket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), clientSocket);
+
+			return clientSocket;
         }
 
         private static void SendCallback(IAsyncResult ar)

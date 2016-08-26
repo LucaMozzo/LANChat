@@ -6,13 +6,14 @@ using LANChat_Core;
 using System.Linq;
 using System.Text;
 using System.Net;
+using System.Net.Sockets;
 
 namespace LANChat_Server
 {
     partial class Program
     {
-        private static LinkedList<User> onlineUsers = new LinkedList<User>();
-        private static Message response;
+		private static Dictionary<User, Socket> onlineUsers = new Dictionary<User, Socket>();
+		private static Message response;
 
         private static void Server_MessageReceived(object sender, EventArgs e)
         {
@@ -36,12 +37,11 @@ namespace LANChat_Server
                                 string query = String.Format("INSERT INTO Session VALUES({0},'{1}','{2}');", row.ItemArray[1], user.token.signature, user.IP);
                                 Database.ExecuteNonQuery(query);
 
-                                //send the token to the client
+                                //send the token to the client and inserts the user with his token in the list of online users
                                 response = new Message();
                                 response.content = user.token;
-                                Server.Send(response);
 
-                                onlineUsers.AddLast(user);
+                                onlineUsers.Add(user, Server.Send(response));
                             }
                         }
                         catch (IndexOutOfRangeException ex)
@@ -59,7 +59,8 @@ namespace LANChat_Server
 								Utils.WriteColour("The user with IPv6 " + m.sender + " has logged out.");
 
 								//remove the user from the list
-								onlineUsers.Remove((from u in onlineUsers where u.IP.Equals(m.sender) select u).ElementAt(0));
+								onlineUsers.Remove((from u in onlineUsers.Keys
+													where u.IP.Equals(m.sender) select u).ElementAt(0));
 							}
                         }
                         break;
