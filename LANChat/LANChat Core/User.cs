@@ -13,19 +13,18 @@ namespace LANChat_Core
         public String UserName { get; private set; }
         public IPAddress IP { get; private set; }
         public Token token { get; private set; }
+        public bool online { get; set; }
 
         /// <summary>
         /// Constructor to create a new user sets the given name, sets the IP address and creates a token
         /// </summary>
         /// <param name="userName">The public username</param>
         /// <param name="address">The IP address</param>
-        public User(String userName, IPAddress address)
+        public User(String userName, IPAddress address, bool online = false)
         {
             UserName = userName;
             IP = address;
-            token = new Token();
-
-            Utils.WriteColour(String.Format("User {0} with address {1} authenticated with token {2}", userName, IP, token.signature), ConsoleColor.White);
+            this.online = online;
         }
 
         /// <summary>
@@ -35,6 +34,16 @@ namespace LANChat_Core
         public User(String userName) : this(userName, GetIPAddress())
         {
 
+        }
+
+        /// <summary>
+        /// Initializes a new user, creating a token
+        /// </summary>
+        public void init()
+        {
+            token = new Token();
+
+            Utils.WriteColour(String.Format("User {0} with address {1} authenticated with token {2}", UserName, IP, token.signature), ConsoleColor.White);
         }
 
         /// <summary>
