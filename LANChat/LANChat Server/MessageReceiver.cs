@@ -61,7 +61,7 @@ namespace LANChat_Server
                     case Command.Logout:
                         if (Database.checkToken(m.token))
                         {
-                            int rowsAffected = Database.ExecuteNonQuery(String.Format("DELETE FROM Session WHERE EXISTS (SELECT * FROM Users JOIN Session ON ID=UserID WHERE UserIP='{0}');", m.sender));
+                            int rowsAffected = Database.ExecuteNonQuery(String.Format("DELETE FROM Session WHERE UserIP='{0}';", m.sender));
                             if (rowsAffected > 0)
 							{
 								Utils.WriteColour("The user with IPv6 " + m.sender + " has logged out.");

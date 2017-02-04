@@ -139,6 +139,16 @@ namespace LANChat_Server
                     }
                     break;
 
+                case "session":
+                    result = Database.ExecuteQuery("SELECT * FROM Session;");
+                    Console.WriteLine("UserID \t | Token \t                         | UserIP");
+                    foreach (DataRow dataRow in result.Rows)
+                    {
+                        Console.WriteLine("{0} \t | {1} \t | {2}", dataRow.ItemArray[0], dataRow.ItemArray[1], dataRow.ItemArray[2]);
+                    }
+                    Utils.WriteColour(result.Rows.Count + " rows in database", ConsoleColor.Green);
+                    break;
+
 				case "clear-session":
 					int ru = Database.ExecuteNonQuery("DELETE FROM Session;");
 					Utils.WriteColour(ru + " rows updated", (ru > 0 ? ConsoleColor.Green : ConsoleColor.Red));
