@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace Shared
 {
+    /// <summary>
+    /// Contains methods used across projects
+    /// </summary>
     public static class Utils
     {
-
+        /// <summary>
+        /// Writes on the console with the given colour, and sets the console colour back to default
+        /// </summary>
+        /// <param name="text">Text to be printed</param>
+        /// <param name="colour">The foreground colour</param>
         public static void WriteColour(string text, ConsoleColor colour = ConsoleColor.Gray)
         {
             ConsoleColor tmp = Console.ForegroundColor;
@@ -22,7 +27,12 @@ namespace Shared
             Console.Write(">");
         }
 
-        public static byte[] ObjectToByteArray(Object obj)
+        /// <summary>
+        /// Converts a serializable object into a byte array for transmission
+        /// </summary>
+        /// <param name="obj">The object</param>
+        /// <returns>The byte array</returns>
+        public static byte[] ObjectToByteArray(object obj)
         {
                 BinaryFormatter bf = new BinaryFormatter();
                 using (var ms = new MemoryStream())
@@ -32,6 +42,11 @@ namespace Shared
                 }
         }
 
+        /// <summary>
+        /// Builds an object from a byte array
+        /// </summary>
+        /// <param name="arrBytes">The input byte array</param>
+        /// <returns>The deserialized object</returns>
         public static Object ByteArrayToObject(byte[] arrBytes)
         {
             try

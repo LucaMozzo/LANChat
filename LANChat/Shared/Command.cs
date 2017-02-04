@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Shared
 {
+    /// <summary>
+    /// Enumerator that specifies the content of a message
+    /// </summary>
     public enum Command
     {
         //credentials before connection

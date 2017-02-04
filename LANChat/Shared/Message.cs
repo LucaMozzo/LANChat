@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using LANChat_Core;
 
 namespace Shared
 {
+    /// <summary>
+    /// Represent a message exchanged between client and server
+    /// </summary>
     [Serializable]
     public class Message : EventArgs
     {

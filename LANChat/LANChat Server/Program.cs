@@ -11,8 +11,15 @@ using Shared;
 
 namespace LANChat_Server
 {
+    /// <summary>
+    /// Main class of the server, contains the interaction logic of the console
+    /// </summary>
     partial class Program
     {
+        /// <summary>
+        /// Infinite loop of the console, until exit signal is sent
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -28,6 +35,10 @@ namespace LANChat_Server
 
         private static Thread listenerTrd;
 
+        /// <summary>
+        /// Handles system input
+        /// </summary>
+        /// <returns>If returns 0, the server exits</returns>
         private static int console()
         {
             Console.Write("\r>");

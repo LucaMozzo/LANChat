@@ -9,11 +9,19 @@ using System.Net;
 
 namespace LANChat_Server
 {
+    /// <summary>
+    /// Partial class of the main Program of the server. It handles all the supported requests
+    /// </summary>
     partial class Program
     {
         private static LinkedList<User> onlineUsers = new LinkedList<User>();
         private static Message response;
 
+        /// <summary>
+        /// When a message is received from a client
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">The message</param>
         private static void Server_MessageReceived(object sender, EventArgs e)
         {
             Message m = (Message)e;

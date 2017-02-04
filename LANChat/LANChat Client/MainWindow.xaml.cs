@@ -1,18 +1,6 @@
 ﻿using LANChat_Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Shared;
 
 namespace LANChat_Client
@@ -33,6 +21,9 @@ namespace LANChat_Client
             }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +31,11 @@ namespace LANChat_Client
             statusLbl.Content = "Ready";
         }
 
+        /// <summary>
+        /// Notifies the server when it closes
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Properties.Settings.Default.serverAddress), Properties.Settings.Default.port);

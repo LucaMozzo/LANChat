@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Sql;
 using System.Data;
 using System.Data.SqlClient;
 using LANChat_Core;

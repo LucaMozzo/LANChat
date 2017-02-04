@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using LANChat_Core;
 using System.Net;
 using Shared;
@@ -29,17 +20,32 @@ namespace LANChat_Client
             userTxt.Focus();
         }
 
+        /// <summary>
+        /// If remote server is checked, the dropdown is enabled 
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void remoteServer_Checked(object sender, RoutedEventArgs e)
         {
             addressTxt.IsEnabled = true;
         }
 
+        /// <summary>
+        /// If remote server is unchecked, the dropdown is disabled
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void remoteServer_Unchecked(object sender, RoutedEventArgs e)
         {
             addressTxt.Text = "127.0.0.1";
             addressTxt.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Send a request to the specified server and authenticate
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void loginBtn_Click(object sender, RoutedEventArgs e)
         {
             if(userTxt.Text == "" || portTxt.Text == "" || addressTxt.Text == "")
@@ -47,7 +53,6 @@ namespace LANChat_Client
                 MessageBox.Show("Check the username, the port and the server address - they can't be empty", "Data entered incorrectly", 
                     MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
-
             }
 
             try
@@ -84,8 +89,17 @@ namespace LANChat_Client
             {
                 MessageBox.Show("Error when trying to connect to the server. Check if the data is entered correctly", "Server unreachable", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            finally
+            {
+                loginBtn.IsEnabled = true;
+            }
         }
 
+        /// <summary>
+        /// Response from the server, once received, log into the main window
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void Client_responseReceived(object sender, EventArgs e)
         {
             Properties.Settings.Default.token = (Token) ((Message)e).content;
@@ -103,12 +117,22 @@ namespace LANChat_Client
             });
         }
 
+        /// <summary>
+        /// Shortcut for login
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void userTxt_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
                 loginBtn_Click(null, new RoutedEventArgs());
         }
 
+        /// <summary>
+        /// Shortcut for login
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event args</param>
         private void pwdTxt_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
