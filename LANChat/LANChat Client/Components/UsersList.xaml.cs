@@ -14,39 +14,53 @@ namespace LANChat_Client.Components
     {
 		private ObservableCollection<User> users { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
 		public UsersList()
         {
             InitializeComponent();
 
 			Client.responseReceived += Client_responseReceived;
 
-
-
-			var timer = new System.Timers.Timer(2000);
+			var timer = new System.Timers.Timer(5000);
 			timer.Elapsed += Timer_Elapsed;
 			timer.Start();
 		}
 
+        /// <summary>
+        /// Update users list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void Client_responseReceived(object sender, EventArgs e)
 		{
-			if (e.GetType().IsEquivalentTo(typeof(Shared.Message)))
+            if (e.GetType().IsEquivalentTo(typeof(Shared.Message)))
 				if (((Shared.Message)e).command == Command.Users)
 				{
-					Application.Current.Dispatcher.Invoke((Action)delegate
+                    Application.Current.Dispatcher.Invoke((Action)delegate
 					{
-						users = new ObservableCollection<User>();
+                        short selected = 0;
+                        users = new ObservableCollection<User>();
 						userList.ItemsSource = users;
-					});
 
-					foreach (User u in (LinkedList<User>)((Shared.Message)e).content)
-						Application.Current.Dispatcher.Invoke((Action)delegate
-						{
-							users.Add(u);
-						});
-				}		
+                        foreach (User u in (LinkedList<User>)((Shared.Message)e).content)
+                            users.Add(u);
+
+                        if (selected >= 0)
+                            userList.SelectedIndex = selected;
+                    });
+
+					
+				}
+
 		}
 
-
+        /// <summary>
+        /// Ask the server for updated users list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void Timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Properties.Settings.Default.serverAddress), Properties.Settings.Default.port);
