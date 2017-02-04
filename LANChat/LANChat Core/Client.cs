@@ -14,6 +14,9 @@ namespace LANChat_Core
         private static IPEndPoint server;
         private static byte[] buffer;
 
+        public static event EventHandler notSent;
+        public static event EventHandler responseReceived;
+
         public static void Start(IPEndPoint ipEndPoint)
         {
             //loads the size of the buffer from the settings
@@ -70,9 +73,12 @@ namespace LANChat_Core
         {
             // Convert the string data to byte data
             byte[] byteData = Shared.Utils.ObjectToByteArray(data);
-
+            
             // Begin sending the data to the remote device.
-            clientSocket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), clientSocket);
+            if(clientSocket.Connected) //to avoid exception to be thrown when server disconnects
+                clientSocket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), clientSocket);
+            else
+                notSent?.Invoke(null, (data is Message ? (Message)data : null));
         }
 
         private static void SendCallback(IAsyncResult ar)
@@ -91,8 +97,6 @@ namespace LANChat_Core
                 Console.WriteLine(e.Message);
             }
         }
-
-        public static event EventHandler responseReceived;
 
         private static void ReceiveCallback(IAsyncResult ar)
         {

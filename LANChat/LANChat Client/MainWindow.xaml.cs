@@ -2,6 +2,7 @@
 using System.Net;
 using System.Windows;
 using Shared;
+using System;
 
 namespace LANChat_Client
 {
@@ -27,8 +28,18 @@ namespace LANChat_Client
         public MainWindow()
         {
             InitializeComponent();
-
+            Client.notSent += Client_notSent;
             statusLbl.Content = "Ready";
+        }
+
+        /// <summary>
+        /// Message that was not sent
+        /// </summary>
+        /// <param name="sender">Sender (null)</param>
+        /// <param name="e">The message not sent. Null if it wasn't a message</param>
+        private void Client_notSent(object sender, EventArgs e)
+        {
+            //handle this
         }
 
         /// <summary>
@@ -48,5 +59,7 @@ namespace LANChat_Client
 
             Client.Send(m);
         }
+
+        
     }
 }

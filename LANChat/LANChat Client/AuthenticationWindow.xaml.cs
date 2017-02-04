@@ -13,6 +13,9 @@ namespace LANChat_Client
     /// </summary>
     public partial class AuthenticationWindow : Window
     {
+        /// <summary>
+        /// The constructor fucusses on controls
+        /// </summary>
         public AuthenticationWindow()
         {
             InitializeComponent();
